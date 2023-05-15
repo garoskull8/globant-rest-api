@@ -1,11 +1,9 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { jwtConstants } from './constants';
-
 import { UserDto } from '../users/dto/user.dto';
-
 import { Types } from 'mongoose';
+import { jwtConstants } from './constants/jwtConstants';
 
 
 @Injectable()
