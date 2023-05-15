@@ -4,11 +4,12 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UserDto } from '../users/dto/user.dto';
 import { Types } from 'mongoose';
 import { jwtConstants } from './constants/jwtConstants';
+import { UsersService } from './service/users.service';
 
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-    constructor(private readonly dbService: GenericService) {
+    constructor(private usersService: UsersService) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             ignoreExpiration: false,
@@ -17,14 +18,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
     async validate(payload: any) {
 
-        payload.user.id = CommonUtils.decrypt(payload.user.id)
-        payload.user.role = CommonUtils.decrypt(payload.user.role)
-        payload.user.full_name = CommonUtils.decrypt(payload.user.full_name)
-        QUERY_USERS[0].$match.$and = []
-        var aggregation = QUERY_USERS
-        aggregation[0].$match.$and.push({ _id: Types.ObjectId(payload.user.id) })
+       return true
 
-        let user = await this.dbService.findOneByAggregation(Entities.USER, aggregation);
+        /*let user = await this.dbService.findOneByAggregation(Entities.USER, aggregation);
         //await this.usersService.findOne(payload.user.id);
         if (!user) CommonUtils.throwHttpException(403, "Forbbiden")
 
@@ -41,6 +37,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         userRequesting.role = payload.user.role
         userRequesting.full_name = payload.user.full_name
 
-        return { user: userRequesting };
+        return { user: userRequesting };*/
     }
 }

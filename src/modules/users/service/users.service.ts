@@ -5,6 +5,7 @@ import { User } from "../interface/user.interface";
 import { UserDto } from '../dto/user.dto';
 import { UserLoginDto } from '../dto/user-login.dto';
 import { JwtService } from '@nestjs/jwt';
+import { CommonUtils } from 'src/global/utils/utils';
 
 @Injectable()
 export class UsersService {
@@ -13,6 +14,9 @@ export class UsersService {
         private readonly jwtService: JwtService,
     ) { }
 
+    async generateJWT(user: any) {
+        return await this.jwtService.sign({ user });
+    }
     async findByEmail(email:string):Promise<User>{
         var filterQuery = {} as any;
         filterQuery.email = email
@@ -25,41 +29,14 @@ export class UsersService {
     async login(user: UserLoginDto) {
         console.log(user.email)
         let tempUser = await this.findByEmail(user.email)
-    /*
-        var userRequesting = new UserDto;
-        userRequesting._id = tempUser._id
-        userRequesting.role = tempUser.role.name
-        userRequesting.full_name = tempUser.name + ' ' + tempUser.paternal_surname + ' ' + tempUser.maternal_surname
-        let validateUser = await this.valdiateUser(user.email, user.password).then((user: User) => {
-            if (user) {
-                return true
-            } else {
-                return false
-            }
-        })
 
-        if (validateUser) {
-            let _id = "" + tempUser._id
-            let role = tempUser.role.name
-            let full_name = tempUser.name + ' ' + tempUser.paternal_surname + ' ' + tempUser.maternal_surname
+        if(user.email==tempUser.email && user.psw==tempUser.psw){
             let jwtUser = {
-                full_name: CommonUtils.encrypt(full_name).toString(),
-                id: CommonUtils.encrypt(_id).toString(),
-                role: CommonUtils.encrypt(role).toString()
+                id: tempUser._id
             }
-
-
-            var log = this.dbService.prepareLog(userRequesting, Methods.GET, null, null, Labels.LOG_IN, Entities.USER)
-            await this.dbService.create(userRequesting, Entities.LOG, log)
-
-            return this.authService.generateJWT(jwtUser)
-        } else {
-            var log = this.dbService.prepareLog(userRequesting, Methods.GET, null, null, Labels.LOG_IN_ATTEMPT_FAILED, Entities.USER)
-            await this.dbService.create(userRequesting, Entities.LOG, log)
-
+            return this.generateJWT(jwtUser)
+        }else{
             throw CommonUtils.throwHttpException(400, "Wrong credentials.")
         }
-    }*/
-        return tempUser
     }
 }
