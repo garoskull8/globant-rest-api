@@ -1,9 +1,10 @@
-import { Controller, Post, UploadedFile, Req, Res, HttpStatus, UseInterceptors } from '@nestjs/common';
+import { Controller, Post, UploadedFile, Req, Res, HttpStatus, UseInterceptors, UseGuards } from '@nestjs/common';
 import { UploadFileService } from './service/upload_file.service';
 import {FileInterceptor} from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-
-
+import { JwtAuthGuard } from '../users/jwt-auth.guards';
+import * as moment from 'moment'
+@UseGuards(JwtAuthGuard)
 @Controller('upload-file')
 export class UploadFileController {
     constructor(private readonly uploadFileService: UploadFileService){}
@@ -17,7 +18,7 @@ export class UploadFileController {
                     {
                         destination: "./uploads/in/staging/",
                         filename: function(req,file,cb){
-                            cb(null,file.originalname+"_"+Date.now()+".csv");
+                            cb(null,file.originalname+"_"+moment(new Date()).format("YYYYMMDD")+".csv");
                         }
                     }
                 )
