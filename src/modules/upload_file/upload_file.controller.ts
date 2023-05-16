@@ -27,7 +27,6 @@ export class UploadFileController {
     )
     async uploadFile(@Req() req, @Res() res,@UploadedFile() file:Express.Multer.File){
         console.log("Entra")
-        file.originalname
         return res.status(HttpStatus.OK).json({
             message: 'File successfully uploaded'
         });
