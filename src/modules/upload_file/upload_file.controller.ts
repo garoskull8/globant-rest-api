@@ -27,6 +27,7 @@ export class UploadFileController {
     )
     async uploadFile(@Req() req, @Res() res,@UploadedFile() file:Express.Multer.File){
         console.log("Entra")
+        await this.uploadFileService.callPythonProcess(file.originalname+"_"+moment(new Date()).format("YYYYMMDD")+".csv")
         return res.status(HttpStatus.OK).json({
             message: 'File successfully uploaded'
         });
