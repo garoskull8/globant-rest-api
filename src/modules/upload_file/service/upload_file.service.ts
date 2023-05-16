@@ -16,5 +16,17 @@ export class UploadFileService {
           })
 
     }
+
+    async database_backup(){
+        await PythonShell.run(
+            'C:/Users/edgar/Desktop/globant_proyect_tech_interview/spark_process/globant_spark_process/spark_process.py',
+             {args: ["backup"]}
+             ).then(messages=>{
+            console.log('finished');
+          }).catch(error=>{
+              console.log(error)
+          })
+
+    }
     
 }
