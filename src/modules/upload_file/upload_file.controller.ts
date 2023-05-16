@@ -1,4 +1,4 @@
-import { Controller, Post, UploadedFile, Req, Res, HttpStatus, UseInterceptors, UseGuards } from '@nestjs/common';
+import { Controller, Post, UploadedFile, Req, Res, HttpStatus, UseInterceptors, UseGuards, Get } from '@nestjs/common';
 import { UploadFileService } from './service/upload_file.service';
 import {FileInterceptor} from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -32,4 +32,13 @@ export class UploadFileController {
             message: 'File successfully uploaded'
         });
     }
+
+    @Get("database-backup")
+    async datanase_back_up(@Req() req, @Res() res){
+        await this.uploadFileService.database_backup()
+        return res.status(HttpStatus.OK).json({
+            message: 'database backup done successfully'
+        });
+    }
+
 }
